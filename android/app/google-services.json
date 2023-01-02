@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1082282333711",
+    "project_id": "chat-flutter-76bfa",
+    "storage_bucket": "chat-flutter-76bfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082282333711:android:0194a10227e796ab20b57a",
+        "android_client_info": {
+          "package_name": "br.com.canho.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082282333711-0n7oi04g1boeg9ki3ucvgc7ftl8316fe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEQFaTxh50C5icSxoRlTzm6GmBC0dIACI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082282333711-0n7oi04g1boeg9ki3ucvgc7ftl8316fe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
