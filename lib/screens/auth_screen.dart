@@ -1,6 +1,7 @@
 import 'package:chat/models/auth_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 
 import '../widgets/auth_form.dart';
@@ -22,7 +23,7 @@ class _AuthScreenState extends State<AuthScreen> {
       _isloading = true;
     });
 
-    AuthResult authResult;
+    UserCredential authResult;
     try {
       if (authData.isLogin) {
         authResult = await _auth.signInWithEmailAndPassword(
@@ -34,15 +35,26 @@ class _AuthScreenState extends State<AuthScreen> {
           email: authData.email!.trim(),
           password: authData.password,
         );
+
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child(authResult.user.uid + 'jpg');
+
+        await ref.putFile(authData.image).onComplete;
+
+        final url = await ref.getDownloadURL();
+
         final userData = {
           'name': authData.name,
           'email': authData.email,
+          'imageUrl': url,
         };
 
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection('users')
-            .document(authResult.user.uid)
-            .setData(userData);
+            .doc(authResult.user.uid)
+            .set(userData);
       }
     } on PlatformException catch (err) {
       final msg =
@@ -66,25 +78,27 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       // body: AuthForm(_handleSubmit),
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              children: [
-                AuthForm(_handleSubmit),
-                if (_isloading)
-                  Positioned.fill(
-                    child: Container(
-                      margin: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(0, 0, 0, 0.5),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  AuthForm(_handleSubmit),
+                  if (_isloading)
+                    Positioned.fill(
+                      child: Container(
+                        margin: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                        ),
+                        child: Center(child: CircularProgressIndicator()),
                       ),
-                      child: Center(child: CircularProgressIndicator()),
                     ),
-                  ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
